@@ -1,2 +1,2 @@
 rusty eft
-- small eft sdk in written in rust
+- small eft sdk written in rust
