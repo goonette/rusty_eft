@@ -1,0 +1,11 @@
+[package]
+name = "rusty_eft"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"]
+path = "src/lib.rs"
+
+[dependencies]
+winapi = { version = "0.3.9", features = ["winuser", "wincon", "minwindef", "winnt", "libloaderapi", "consoleapi"] }
+clearscreen = "1.0.10"
