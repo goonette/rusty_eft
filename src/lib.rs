@@ -1,5 +1,11 @@
 extern crate winapi;
 extern crate clearscreen;
+extern crate core;
+
+mod macros;
+mod types;
+mod mem;
+mod mono;
 
 use std::thread;
 
@@ -7,29 +13,30 @@ use winapi::shared::minwindef::{BOOL, HINSTANCE, LPVOID, TRUE};
 use winapi::um::libloaderapi::DisableThreadLibraryCalls;
 use winapi::um::winnt::DLL_PROCESS_ATTACH;
 
-mod macros;
-mod types;
-mod mem;
-mod mono;
-
 fn main_thread() {
-    clearscreen::clear().expect("Couldn't Clear"); // Clears Console because I use battleyent
+    clearscreen::clear().expect("Couldn't Clear"); // Clears console because I use battleyent
 
     println!("hai :3");
 
     let mono = mono::Lib::new(c_str!("mono-2.0-bdwgc.dll"));
 
-    let image = mono.get_mono_image(c_str!("Assembly-CSharp"));
-    println!("Assembly-CSharp = {:?}", image);
+    let assembly_csharp = mono.get_image(c_str!("Assembly-CSharp"));
+    println!("Assembly-CSharp = {:?}", assembly_csharp);
 
-    let domain = mono.get_mono_domain();
+    let domain = mono.get_domain();
     println!("Mono Domain = {:?}", domain);
 
-    let thread = mono.get_mono_thread(domain);
+    let thread = mono.get_thread(domain);
     println!("Mono Thread = {:?}", thread);
 
-    let main_application = mono.get_mono_class(image, c_str!("EFT"), c_str!("MainApplication"));
-    println!("Main Application = {:?}", main_application);
+    let player = mono.get_class(assembly_csharp, c_str!("EFT"), c_str!("Player"));
+    println!("Player Class = {:?}", player);
+
+    let physical = mono.get_field(player, c_str!("Physical"));
+    println!("Physical = {:?}", physical);
+
+    let physical_offset = mono.field_get_offset(physical);
+    println!("Physical Offset = {:?}", physical_offset);
 }
 
 #[no_mangle]
