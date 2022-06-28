@@ -68,4 +68,11 @@ impl MonoLib {
 
         function(method) as *const usize
     }
+
+    pub fn new_string(&self, domain: *const usize, text: &str) -> *const usize {
+        let function_ptr = mem::get_export(self.mono_module, c_str!("mono_string_new"));
+        let function = make_fn!(function_ptr, *const usize, *const usize, *const c_char);
+
+        function(domain, text.as_ptr() as *const i8) as *const usize
+    }
 }
