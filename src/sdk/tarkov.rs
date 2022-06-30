@@ -23,7 +23,7 @@ impl World {
     }
 
     pub fn get_players(&self) -> Vec<*const usize> {
-        let registered_players_addr = self.mono.get_field(self.class, "RegisteredPlayers");
+        let registered_players_addr = self.mono.get_field(self.class, c_str!("RegisteredPlayers"));
         let registered_players = unsafe { *cast!(self.base_addr as usize + self.mono.field_get_offset(registered_players_addr) as usize, usize) as *const usize };
 
         let player_base = unsafe { *cast!(registered_players as usize + 0x10, usize ) as *const usize };
@@ -39,5 +39,22 @@ impl World {
         }
 
         vec
+    }
+}
+
+pub struct Player {
+    base_addr: *const usize,
+    class: *const usize,
+    mono: MonoLib,
+}
+
+impl Player {
+    pub fn new(base_addr: *const usize, mono: MonoLib) -> Player {
+        let class = mono.get_class(c_str!("Assembly-CSharp"), c_str!("EFT"), c_str!("Player"));
+        Player { base_addr, class, mono }
+    }
+
+    pub fn get_addr(&self) -> *const usize {
+        self.base_addr
     }
 }

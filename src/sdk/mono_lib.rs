@@ -3,6 +3,7 @@ use winapi::ctypes::{c_char, c_int};
 
 use ::{c_str, make_fn, mem};
 
+#[derive(Clone, Copy)]
 pub struct MonoLib {
     mono_module: HMODULE,
 }

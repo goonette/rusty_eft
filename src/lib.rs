@@ -11,11 +11,10 @@ use winapi::shared::minwindef::{BOOL, HINSTANCE, LPVOID, TRUE};
 use winapi::um::libloaderapi::DisableThreadLibraryCalls;
 use winapi::um::winnt::DLL_PROCESS_ATTACH;
 
-
 fn main_thread() {
     clearscreen::clear().expect("Couldn't Clear"); // Clears console because I use battleyent.
 
-    let mono = sdk::MonoLib::new(c_str!("sdk-2.0-bdwgc.dll"));
+    let mono = sdk::MonoLib::new(c_str!("mono-2.0-bdwgc.dll"));
 
     let domain = mono.get_domain();
     println!("Mono Domain = {:?}", domain);
@@ -38,6 +37,11 @@ fn main_thread() {
 
     let players = local_game_world.get_players();
     println!("Player Count = {:}", players.len());
+
+    for p in players {
+        let player = sdk::Player::new(p, mono);
+        println!("Player Addr {:?}", player.get_addr());
+    }
 }
 
 #[no_mangle]
